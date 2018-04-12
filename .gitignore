@@ -1,0 +1,12 @@
+# Idea IDE Files
+.idea/
+
+# Unecessary CMake Files
+CMakeFiles/
+cmake_install.cmake
+CMakeCache.txt
+Makefile
+TravelRight.cbp
+
+# Vim Files
+*.swp
