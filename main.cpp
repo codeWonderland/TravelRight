@@ -20,7 +20,7 @@
  *
  ***************************************************************************/
 /* <DESC>
- * HTTP request with custom modified, removed and added headers
+ * Simple HTTPS GET
  * </DESC>
  */
 #include <stdio.h>
@@ -31,29 +31,37 @@ int main(void)
     CURL *curl;
     CURLcode res;
 
+    curl_global_init(CURL_GLOBAL_DEFAULT);
+
     curl = curl_easy_init();
     if(curl) {
-        struct curl_slist *chunk = NULL;
+        curl_easy_setopt(curl, CURLOPT_URL, "https://example.com/");
 
-        /* Remove a header curl would otherwise add by itself */
-        chunk = curl_slist_append(chunk, "Accept:");
+#ifdef SKIP_PEER_VERIFICATION
+        /*
+     * If you want to connect to a site who isn't using a certificate that is
+     * signed by one of the certs in the CA bundle you have, you can skip the
+     * verification of the server's certificate. This makes the connection
+     * A LOT LESS SECURE.
+     *
+     * If you have a CA cert for the server stored someplace else than in the
+     * default bundle, then the CURLOPT_CAPATH option might come handy for
+     * you.
+     */
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+#endif
 
-        /* Add a custom header */
-        chunk = curl_slist_append(chunk, "Another: yes");
+#ifdef SKIP_HOSTNAME_VERIFICATION
+        /*
+     * If the site you're connecting to uses a different host name that what
+     * they have mentioned in their server certificate's commonName (or
+     * subjectAltName) fields, libcurl will refuse to connect. You can skip
+     * this check, but this will make the connection less secure.
+     */
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+#endif
 
-        /* Modify a header curl otherwise adds differently */
-        chunk = curl_slist_append(chunk, "Host: example.com");
-
-        /* Add a header with "blank" contents to the right of the colon. Note that
-           we're then using a semicolon in the string we pass to curl! */
-        chunk = curl_slist_append(chunk, "X-silly-header;");
-
-        /* set our custom set of headers */
-        res = curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
-
-        curl_easy_setopt(curl, CURLOPT_URL, "localhost");
-        curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-
+        /* Perform the request, res will get the return code */
         res = curl_easy_perform(curl);
         /* Check for errors */
         if(res != CURLE_OK)
@@ -62,9 +70,9 @@ int main(void)
 
         /* always cleanup */
         curl_easy_cleanup(curl);
-
-        /* free the custom headers */
-        curl_slist_free_all(chunk);
     }
+
+    curl_global_cleanup();
+
     return 0;
 }
