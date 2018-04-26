@@ -25,9 +25,29 @@
  */
 #include <iostream>
 #include "ApiInterface.h"
+#include "include/rapidjson/document.h"
+#include "include/rapidjson/writer.h"
+#include "include/rapidjson/stringbuffer.h"
 
-void echo(std::string json) {
-    std::cout << json;
+using namespace rapidjson;
+
+void echo(std::string jsonMsg) {
+    std::cout << jsonMsg;
+
+    Document d;
+    d.Parse(jsonMsg.c_str());
+
+//    // 2. Modify it by DOM.
+//    Value& s = d["stars"];
+//    s.SetInt(s.GetInt() + 1);
+
+    // 3. Stringify the DOM
+    StringBuffer buffer;
+    Writer<StringBuffer> writer(buffer);
+    d.Accept(writer);
+
+    // Output {"project":"rapidjson","stars":11}
+    std::cout << buffer.GetString() << std::endl;
 }
 
 int main(int argc, const char *argv[])
