@@ -29,35 +29,34 @@
 #include "include/rapidjson/writer.h"
 #include "include/rapidjson/stringbuffer.h"
 
-using namespace rapidjson;
+#include "include/nlohmann/json.hpp"
+
+// for convenience
+using json = nlohmann::json;
 
 void echo(std::string jsonMsg) {
     std::cout << jsonMsg;
 
-    Document d;
-    d.Parse(jsonMsg.c_str());
-
-    // TODO : for each waypoint, check to see if the zip is unique, append it to list if so
-    // ^(potentially an assembly thing)
-//    // 2. Modify it by DOM.
-//    Value& s = d["stars"];
-//    s.SetInt(s.GetInt() + 1);
-
-    // 3. Stringify the DOM
-    StringBuffer buffer;
-    Writer<StringBuffer> writer(buffer);
-    d.Accept(writer);
+    auto json = json::parse(jsonMsg);
 
     // Output {"project":"rapidjson","stars":11}
-    std::cout << buffer.GetString() << std::endl;
+    std::cout << json.dump(4) << std::endl;
 }
 
 int main(int argc, const char *argv[])
 {
     // TODO: Get input from user and replace ' ' with '+' via assembly
-    std::string url = "https://maps.googleapis.com/maps/api/directions/json?origin=23947&destination=05401&key=AIzaSyCSyN9jsmW-VcwTgKvTopbA32jkloM2CnQ";
+    //std::string url = "https://maps.googleapis.com/maps/api/directions/json?origin=23947&destination=05401&key=AIzaSyCSyN9jsmW-VcwTgKvTopbA32jkloM2CnQ";
+
+    std::string url = "http://open.mapquestapi.com/directions/v2/route?key=6Qg1GnBelmtrj3XZKBGKTcSApr8Bcb8Q";
+
+    std::string from = "23947", to = "05401";
+
+    url += "&from=" + from + "&to=" + to;
+
+    std::string headers[] = {};
 
     ApiInterface myInterface = ApiInterface();
-    myInterface.callApi(url, &echo);
+    myInterface.callApi(url, &echo, headers, 0);
     return 0;
 }

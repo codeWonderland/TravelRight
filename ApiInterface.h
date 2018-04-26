@@ -14,10 +14,10 @@ class ApiInterface
 public:
     static std::string downloadedResponse;
 
-    void callApi(std::string url, void (*cb)(std::string));
+    void callApi(std::string url, void (*cb)(std::string), std::string headers[], int size);
 
 //    Basic structure established from https://stackoverflow.com/questions/5707957/c-libcurl-json-rest
-    std::string downloadJSON(std::string URL);
+    std::string downloadJSON(std::string URL, std::string headers[], int size);
 
 //    Basic structure established from https://stackoverflow.com/questions/5707957/c-libcurl-json-rest
     static int writer(char *data, size_t size, size_t nmemb, std::string *buffer_in);
