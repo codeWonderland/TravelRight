@@ -37,6 +37,8 @@ void echo(std::string jsonMsg) {
     Document d;
     d.Parse(jsonMsg.c_str());
 
+    // TODO : for each waypoint, check to see if the zip is unique, append it to list if so
+    // ^(potentially an assembly thing)
 //    // 2. Modify it by DOM.
 //    Value& s = d["stars"];
 //    s.SetInt(s.GetInt() + 1);
@@ -52,6 +54,7 @@ void echo(std::string jsonMsg) {
 
 int main(int argc, const char *argv[])
 {
+    // TODO: Get input from user and replace ' ' with '+' via assembly
     std::string url = "https://maps.googleapis.com/maps/api/directions/json?origin=23947&destination=05401&key=AIzaSyCSyN9jsmW-VcwTgKvTopbA32jkloM2CnQ";
 
     ApiInterface myInterface = ApiInterface();
