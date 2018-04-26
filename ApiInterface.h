@@ -16,8 +16,10 @@ public:
 
     void callApi(std::string url, void (*cb)(std::string));
 
+//    Basic structure established from https://stackoverflow.com/questions/5707957/c-libcurl-json-rest
     std::string downloadJSON(std::string URL);
 
+//    Basic structure established from https://stackoverflow.com/questions/5707957/c-libcurl-json-rest
     static int writer(char *data, size_t size, size_t nmemb, std::string *buffer_in);
 };
 

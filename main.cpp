@@ -32,7 +32,9 @@ void echo(std::string json) {
 
 int main(int argc, const char *argv[])
 {
-    ApiInterface apiInterface = ApiInterface();
-    apiInterface.callApi("https://jsonplaceholder.typicode.com/posts/1", &echo);
+    std::string url = "https://maps.googleapis.com/maps/api/directions/json?origin=23947&destination=05401&key=AIzaSyCSyN9jsmW-VcwTgKvTopbA32jkloM2CnQ";
+
+    ApiInterface myInterface = ApiInterface();
+    myInterface.callApi(url, &echo);
     return 0;
 }
