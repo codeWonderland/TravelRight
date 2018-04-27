@@ -37,6 +37,8 @@ using json = nlohmann::json;
 void echo(std::string jsonMsg) {
     std::cout << jsonMsg;
 
+    while (jsonMsg.find('<U+000D>') < -1)
+
     auto json = json::parse(jsonMsg);
 
     // Output {"project":"rapidjson","stars":11}
